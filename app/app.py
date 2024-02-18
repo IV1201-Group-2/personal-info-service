@@ -6,8 +6,6 @@ from flask_cors import CORS
 
 from app import jwt_handlers
 from app.extensions import database, jwt
-from app.routes.application_route import application_submission_bp
-from app.routes.competences_route import competences_bp
 from app.routes.error_handler import handle_all_unhandled_exceptions
 from app.routes.personal_info_route import personal_info_bp
 
@@ -94,12 +92,6 @@ def register_blueprints(application_form_api: Flask) -> None:
     application_form_api.register_blueprint(
             personal_info_bp,
             url_prefix='/api/applicant/personal-info')
-    application_form_api.register_blueprint(
-            competences_bp,
-            url_prefix='/api/application-form/competences')
-    application_form_api.register_blueprint(
-            application_submission_bp,
-            url_prefix='/api/application-form/submit')
 
 
 if __name__ == "__main__":
