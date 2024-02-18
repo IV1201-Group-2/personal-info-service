@@ -5,7 +5,7 @@ from sqlalchemy.exc import NoResultFound, SQLAlchemyError
 
 from app.repositories.personal_info_repository import \
     get_person_from_db
-from tests.utilities.test_utilities import remove_test_user_1_from_db, \
+from tests.utilities.test_utilities import remove_users_from_db, \
     setup_test_user_1_in_db
 
 
@@ -17,7 +17,7 @@ def test_get_person_from_db_success(app_with_client):
         assert person.name == 'test'
         assert person.surname == 'tester'
 
-    remove_test_user_1_from_db(app)
+    remove_users_from_db(app)
 
 
 def test_get_person_from_db_no_result(app_with_client):

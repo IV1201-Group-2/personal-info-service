@@ -4,7 +4,7 @@ import pytest
 from sqlalchemy.exc import NoResultFound, SQLAlchemyError
 
 from app.services.personal_info_service import fetch_personal_info
-from tests.utilities.test_utilities import remove_test_user_1_from_db, \
+from tests.utilities.test_utilities import remove_users_from_db, \
     setup_test_user_1_in_db
 
 
@@ -16,7 +16,7 @@ def test_fetch_personal_info_success(app_with_client):
         assert result['name'] == 'test'
         assert result['surname'] == 'tester'
 
-    remove_test_user_1_from_db(app)
+    remove_users_from_db(app)
 
 
 def test_fetch_personal_info_no_result(app_with_client):
