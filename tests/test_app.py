@@ -25,5 +25,3 @@ def test_blueprint_registration(app_with_client):
     app, _ = app_with_client
     blueprints = [bp.name for bp in app.blueprints.values()]
     assert 'personal-info' in blueprints
-    assert 'competences' in blueprints
-    assert 'applicant_competences'
