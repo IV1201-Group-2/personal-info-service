@@ -1,3 +1,5 @@
+from typing import Optional
+
 from flask import Blueprint, Response, current_app, jsonify
 from flask_jwt_extended import get_jwt, jwt_required
 from sqlalchemy.exc import NoResultFound, SQLAlchemyError
@@ -9,21 +11,31 @@ personal_info_bp = Blueprint('personal-info', __name__)
 
 
 @personal_info_bp.route('/', methods=['GET'])
+@personal_info_bp.route('/<int:person_id>', methods=['GET'])
 @jwt_required()
-def get_personal_info() -> tuple[Response, int]:
+def get_personal_info(person_id: Optional[int] = None) -> tuple[Response, int]:
     """
-    Gets the personal information of the current user.
+    Retrieves personal information of a user.
 
-    This function retrieves the personal information of the current user from
-    the database. If the user is not found, it returns a 404 error. If there is
-    an issue with the database operation, it returns a 500 error.
+    If no person_id is provided, it fetches the current user's information. If
+    a person_id is provided, it fetches the information of the user with
+    that id, given the current user has a role of 1.
 
+    Returns a tuple containing the response and the status code.
+
+    :param person_id: The id of the user to retrieve information for. If
+                      None, retrieves current user's info.
     :returns: A tuple containing the response and the status code.
-    :raises NoResultFound: If no user is found in the database.
-    :raises SQLAlchemyError: If there is an issue with the database operation.
+    :raises NoResultFound: If no user is found.
+    :raises SQLAlchemyError: If there is a database issue.
+    :raises PermissionError: If the person_id belonged to a recruiter.
     """
 
-    person_id = get_jwt()['id']
+    if person_id is None:
+        person_id = get_jwt()['id']
+    else:
+        if get_jwt()['role'] != 1:
+            return jsonify({'error': 'UNAUTHORIZED'}), StatusCodes.UNAUTHORIZED
 
     try:
         personal_info = fetch_personal_info(person_id)
@@ -35,3 +47,5 @@ def get_personal_info() -> tuple[Response, int]:
     except SQLAlchemyError:
         return (jsonify({'error': 'COULD_NOT_FETCH_USER'}),
                 StatusCodes.INTERNAL_SERVER_ERROR)
+    except PermissionError:
+        return jsonify({'error': 'FORBIDDEN'}), StatusCodes.FORBIDDEN
