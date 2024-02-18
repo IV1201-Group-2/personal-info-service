@@ -1,16 +1,20 @@
 # Application Form API
 
 This API is used by applicants to submit their application for a job. The API allows applicants to check their
-registered personal information as well as submit an application.
+registered personal information as well as submit an application. Recruiters can also check the personal information of
+applicants.
 
 ## Personal Info Endpoint
 
-`GET /api/application-form/applicant/personal-info`
+`GET /api/personal-info`
+`GET /api/personal-info/<int:person_id>`
 
 ### Additional requirements
 
 * The user must be logged in when calling this API
 * The user's JWT token must be included in the `Authorization` header
+* For the second URL, the user must have a role of 1 to fetch another user's information
+* Information of a user with a role of 1 (recruiter) cannot be retrieved
 
 ### Successful response
 
@@ -18,12 +22,13 @@ The API returns an object with the following structure:
 
 ```json
 {
-  "id": 0,
-  "first_name": "John",
-  "last_name": "Doe",
+  "id": 1,
+  "name": "John",
+  "surname": "Doe",
+  "pnr": "1234567890",
   "email": "johndoe@example.com",
-  "phone_number": "1234567890",
-  "address": "123 Main St, Anytown, Anystate, 12345"
+  "username": "johndoe",
+  "role": 2
 }
 ```
 
@@ -40,6 +45,10 @@ There was an issue with the database operation when trying to fetch the user's i
 #### `UNAUTHORIZED` (401 Unauthorized)
 
 User is not logged in (JWT token was not provided or is invalid)
+
+#### `FORBIDDEN` (401 Forbidden)
+
+The person_id provided in the URL belonged to a recruiter
 
 #### `INVALID_TOKEN` (401 Unauthorized)
 
