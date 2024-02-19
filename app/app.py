@@ -21,21 +21,21 @@ def create_app() -> Flask:
     :returns: The configured Flask application.
     """
 
-    application_form_api = Flask(__name__)
-    application_form_api.config.from_pyfile('config.py')
-    application_form_api.errorhandler(Exception)(
+    personal_info_api = Flask(__name__)
+    personal_info_api.config.from_pyfile('config.py')
+    personal_info_api.errorhandler(Exception)(
             handle_all_unhandled_exceptions)
 
-    CORS(application_form_api, resources={r"/api/*": {"origins": "*"}})
+    CORS(personal_info_api, resources={r"/api/*": {"origins": "*"}})
 
-    setup_logging(application_form_api)
-    setup_extensions(application_form_api)
-    register_blueprints(application_form_api)
+    setup_logging(personal_info_api)
+    setup_extensions(personal_info_api)
+    register_blueprints(personal_info_api)
 
-    return application_form_api
+    return personal_info_api
 
 
-def setup_logging(application_form_api: Flask) -> None:
+def setup_logging(personal_info_api: Flask) -> None:
     """
     Sets up logging for the Flask application.
 
@@ -43,24 +43,24 @@ def setup_logging(application_form_api: Flask) -> None:
     directory for log files if it doesn't exist, and configures the logging
     module to write logs to a file with a specified format and level.
 
-    :param application_form_api: The Flask application.
+    :param personal_info_api: The Flask application.
     """
 
-    log_dir = application_form_api.config.get('LOG_DIR', 'logs')
+    log_dir = personal_info_api.config.get('LOG_DIR', 'logs')
     os.makedirs(
             log_dir, exist_ok=True)
 
     logging.basicConfig(
-            level=application_form_api.config.get('LOG_LEVEL', logging.INFO),
-            format=application_form_api.config.get(
+            level=personal_info_api.config.get('LOG_LEVEL', logging.INFO),
+            format=personal_info_api.config.get(
                     'LOG_FORMAT',
                     '%(asctime)s - %(name)s - %(levelname)s - %(message)s'),
-            filename=application_form_api.config.get(
+            filename=personal_info_api.config.get(
                     'LOG_FILE', os.path.join(log_dir, 'app.log'))
     )
 
 
-def setup_extensions(application_form_api: Flask) -> None:
+def setup_extensions(personal_info_api: Flask) -> None:
     """
     Sets up extensions for the Flask application.
 
@@ -68,28 +68,28 @@ def setup_extensions(application_form_api: Flask) -> None:
     application, and registers JWT error handlers. It also creates all
     database tables.
 
-    :param application_form_api: The Flask application.
+    :param personal_info_api: The Flask application.
     """
 
-    database.init_app(application_form_api)
-    jwt.init_app(application_form_api)
+    database.init_app(personal_info_api)
+    jwt.init_app(personal_info_api)
     jwt_handlers.register_jwt_handlers(jwt)
 
-    with application_form_api.app_context():
+    with personal_info_api.app_context():
         database.create_all()
 
 
-def register_blueprints(application_form_api: Flask) -> None:
+def register_blueprints(personal_info_api: Flask) -> None:
     """
     Registers blueprints for the Flask application.
 
     This function registers blueprints for the Flask application. Each
     blueprint corresponds to a different part of the application.
 
-    :param application_form_api: The Flask application.
+    :param personal_info_api: The Flask application.
     """
 
-    application_form_api.register_blueprint(
+    personal_info_api.register_blueprint(
             personal_info_bp,
             url_prefix='/api/applicant/personal-info')
 
