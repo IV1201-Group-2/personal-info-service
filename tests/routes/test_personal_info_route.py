@@ -42,6 +42,21 @@ def test_get_personal_info_recruiter_success(app_with_client):
     remove_users_from_db(app)
 
 
+def test_get_personal_info_recruiter_with_invalid_id(app_with_client):
+    app, test_client = app_with_client
+    setup_test_user_1_in_db(app)
+    setup_test_user_recruiter_in_db(app)
+    token = generate_token_for_recruiter(app)
+
+    response = test_client.get(
+            '/api/applicant/personal-info/123123123123123123123',
+            headers={'Authorization': f'Bearer {token}'})
+    assert response.status_code == StatusCodes.BAD_REQUEST
+    assert response.json['error'] == 'INVALID_ID'
+
+    remove_users_from_db(app)
+
+
 def test_get_personal_info_unauthorized_access(app_with_client):
     app, test_client = app_with_client
     setup_test_user_1_in_db(app)
