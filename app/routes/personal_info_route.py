@@ -34,6 +34,8 @@ def get_personal_info(person_id: Optional[int] = None) -> tuple[Response, int]:
     if person_id is None:
         person_id = get_jwt()['id']
     else:
+        if person_id < 1 or person_id > 1000000:
+            return jsonify({'error': 'INVALID_ID'}), StatusCodes.BAD_REQUEST
         if get_jwt()['role'] != 1:
             return jsonify({'error': 'UNAUTHORIZED'}), StatusCodes.UNAUTHORIZED
 
