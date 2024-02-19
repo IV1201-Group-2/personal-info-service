@@ -23,8 +23,7 @@ def create_app() -> Flask:
 
     personal_info_api = Flask(__name__)
     personal_info_api.config.from_pyfile('config.py')
-    personal_info_api.errorhandler(Exception)(
-            handle_all_unhandled_exceptions)
+    personal_info_api.errorhandler(Exception)(handle_all_unhandled_exceptions)
 
     CORS(personal_info_api, resources={r"/api/*": {"origins": "*"}})
 
@@ -47,8 +46,7 @@ def setup_logging(personal_info_api: Flask) -> None:
     """
 
     log_dir = personal_info_api.config.get('LOG_DIR', 'logs')
-    os.makedirs(
-            log_dir, exist_ok=True)
+    os.makedirs(log_dir, exist_ok=True)
 
     logging.basicConfig(
             level=personal_info_api.config.get('LOG_LEVEL', logging.INFO),
@@ -90,8 +88,7 @@ def register_blueprints(personal_info_api: Flask) -> None:
     """
 
     personal_info_api.register_blueprint(
-            personal_info_bp,
-            url_prefix='/api/applicant/personal-info')
+            personal_info_bp, url_prefix='/api/applicant/personal-info')
 
 
 if __name__ == "__main__":
