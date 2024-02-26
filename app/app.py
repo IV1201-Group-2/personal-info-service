@@ -25,7 +25,8 @@ def create_app() -> Flask:
     personal_info_api.config.from_pyfile('config.py')
     personal_info_api.errorhandler(Exception)(handle_all_unhandled_exceptions)
 
-    CORS(personal_info_api, resources={r"/api/*": {"origins": "*"}})
+    CORS(personal_info_api, resources={r"/api/*": {
+        "origins": "https://client-service-f45dc8e85ddf.herokuapp.com"}})
 
     setup_logging(personal_info_api)
     setup_extensions(personal_info_api)
