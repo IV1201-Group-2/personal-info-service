@@ -1,6 +1,6 @@
 import logging
 
-from flask import jsonify
+from flask import jsonify, request
 
 from app.utilities.status_codes import StatusCodes
 
@@ -17,6 +17,7 @@ def handle_all_unhandled_exceptions(exception):
     :returns: A tuple containing a JSON response and a status code.
     """
 
-    logging.debug(str(exception))
+    requester_ip = request.remote_addr
+    logging.debug(f'{requester_ip} - ' + str(exception))
     return (jsonify({'error': 'INTERNAL_SERVER_ERROR'}),
             StatusCodes.INTERNAL_SERVER_ERROR)
