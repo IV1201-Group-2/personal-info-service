@@ -58,5 +58,5 @@ def get_personal_info(person_id: Optional[int] = None) -> tuple[Response, int]:
                 StatusCodes.INTERNAL_SERVER_ERROR)
     except PermissionError:
         logging.warning(f'Unauthorized access to personal info for id: '
-                      f'{person_id}.')
+                        f'{person_id}.')
         return jsonify({'error': 'FORBIDDEN'}), StatusCodes.FORBIDDEN

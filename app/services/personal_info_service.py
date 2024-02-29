@@ -1,5 +1,3 @@
-import logging
-
 from app.repositories.personal_info_repository import get_person_from_db
 
 
