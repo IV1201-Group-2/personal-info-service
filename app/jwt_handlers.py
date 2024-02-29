@@ -1,6 +1,6 @@
 import logging
 
-from flask import current_app, jsonify, request
+from flask import jsonify, request
 from flask_jwt_extended import JWTManager
 from jwt import InvalidTokenError
 
