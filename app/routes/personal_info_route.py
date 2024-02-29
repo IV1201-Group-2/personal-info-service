@@ -1,7 +1,7 @@
 import logging
 from typing import Optional
 
-from flask import Blueprint, Response, jsonify
+from flask import Blueprint, Response, jsonify, request
 from flask_jwt_extended import get_jwt, jwt_required
 from sqlalchemy.exc import NoResultFound, SQLAlchemyError
 
@@ -32,31 +32,35 @@ def get_personal_info(person_id: Optional[int] = None) -> tuple[Response, int]:
     :raises PermissionError: If the person_id belonged to a recruiter.
     """
 
-    logging.info("Starting application submission process")
+    requester_ip = request.remote_addr
 
     if person_id is None:
         person_id = get_jwt()['id']
     else:
         if person_id < 1 or person_id > 1000000:
-            logging.warning(f'Invalid person_id: {person_id}.')
+            logging.warning(f' - {requester_ip} - Invalid person_id:'
+                            f' {person_id}.')
             return jsonify({'error': 'INVALID_ID'}), StatusCodes.BAD_REQUEST
         if get_jwt()['role'] != 1:
-            logging.warning(f'Unauthorized access to personal info for id: '
-                            f'{person_id}.')
+            logging.warning(f' - {requester_ip} - Unauthorized access to '
+                            f'personal info for id: {person_id}.')
             return jsonify({'error': 'UNAUTHORIZED'}), StatusCodes.UNAUTHORIZED
 
     try:
         personal_info = fetch_personal_info(person_id)
-        logging.info(f'Personal info fetched for id: {person_id}.')
+        logging.info(f' - {requester_ip} - Personal info fetched for id:'
+                     f' {person_id}.')
         return jsonify(personal_info), StatusCodes.OK
     except NoResultFound:
-        logging.warning(f'User not found for id: {person_id}.')
+        logging.warning(f' - {requester_ip} - User not found for id:'
+                        f' {person_id}.')
         return jsonify({'error': 'USER_NOT_FOUND'}), StatusCodes.NOT_FOUND
     except SQLAlchemyError:
-        logging.error(f'Could not fetch user for id: {person_id}.')
+        logging.error(f' - {requester_ip} - Could not fetch user for id:'
+                      f' {person_id}.')
         return (jsonify({'error': 'COULD_NOT_FETCH_USER'}),
                 StatusCodes.INTERNAL_SERVER_ERROR)
     except PermissionError:
-        logging.warning(f'Unauthorized access to personal info for id: '
-                        f'{person_id}.')
+        logging.warning(f' - {requester_ip} - Unauthorized access to '
+                        f'personal info for id: {person_id}.')
         return jsonify({'error': 'FORBIDDEN'}), StatusCodes.FORBIDDEN
