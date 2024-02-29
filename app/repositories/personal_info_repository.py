@@ -1,4 +1,5 @@
-from flask import current_app
+import logging
+
 from sqlalchemy.exc import NoResultFound, SQLAlchemyError
 
 from app.models.person import Person
@@ -21,8 +22,8 @@ def get_person_from_db(person_id: int) -> Person:
     try:
         return Person.query.filter_by(person_id=person_id).one()
     except NoResultFound as exception:
-        current_app.logger.error(exception)
+        logging.debug(str(exception))
         raise NoResultFound
     except SQLAlchemyError as exception:
-        current_app.logger.error(exception)
+        logging.debug(str(exception))
         raise SQLAlchemyError
