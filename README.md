@@ -1,147 +1,83 @@
-# Application Form API
+# Personal Information Service
+This is a simple RESTful API that allows applicants and recruiters to retrieve applicant's personal information. It is a microservice that is part of a larger, recruitment application.
+## General Information
+- **Programming Language**: Python
+- **Virtual Environment**: Python venv
+- **Framework**: Flask
+- **Application Modularity**: Flask Blueprints 
+- **API Design**: RESTful principles
+- **Configuration Management**: Externalized to config.py
+- **Security**: Flask-JWT-Extended (authentication & authorization)
+- **CORS**: Flask-Cors
+- **Logging**: Flask-Logging + Root Logger
+- **Database Integration**: Flask-SQLAlchemy
+- **Database**: PostgreSQL
+- **Testing**: Pytest
+- **Code Coverage**: pytest-cov
+- **Linting**: flake8
+- **Dependency Management**: Pip
+- **Continuous Integration**: GitHub Actions
+- **Continuous Deployment**: Heroku
 
-This API is used by applicants to submit their application for a job. The API allows applicants to check their
-registered personal information as well as submit an application. Recruiters can also check the personal information of
-applicants.
+## Project Setup
+Ensure all commands are executed from the project root.
 
-## Personal Info Endpoint
+1. **Environment Setup**: Create and activate a virtual environment.
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    ```
 
-`GET /api/personal-info`
-`GET /api/personal-info/<int:person_id>`
+2. **Install Dependencies**: Install all required dependencies.
+    ```bash
+    pip install -r requirements.txt
+    pip install -r requirements-dev.txt
+    ```
 
-### Additional requirements
+3. **Run Tests**: Execute all tests.
+    ```bash
+    pytest
+    ```
 
-* The user must be logged in when calling this API
-* The user's JWT token must be included in the `Authorization` header
-* For the second URL, the user must have a role of 1 to fetch another user's information
-* Information of a user with a role of 1 (recruiter) cannot be retrieved
+4. **Code Coverage**: Generate code coverage report.
+    ```bash
+    pytest --cov=app
+    ```
 
-### Successful response
+5. **Linting**: Run linting checks.
+    ```bash
+   flake8 --show-source --statistics app tests
+    ```
 
-The API returns an object with the following structure:
+6. **Environment Variables**:
+   - Setup as specified in config.py.
 
-```json
-{
-  "id": 1,
-  "name": "John",
-  "surname": "Doe",
-  "pnr": "1234567890",
-  "email": "johndoe@example.com",
-  "username": "johndoe",
-  "role": 2
-}
+
+7. **Run Development Server**: Start the development server.
+    ```bash
+    flask --app app/app run
+    ```
+
+8. **Run Heroku Locally**: Run the application locally using Heroku.
+    ```bash
+    heroku local
+    ```
+
+## Directory Structure
+
 ```
-
-### Error responses
-
-#### `USER_NOT_FOUND` (404 Not Found)
-
-No user was found with the ID specified in the JWT token
-
-#### `COULD_NOT_FETCH_USER` (500 Internal Server Error)
-
-There was an issue with the database operation when trying to fetch the user's information
-
-#### `UNAUTHORIZED` (401 Unauthorized)
-
-User is not logged in (JWT token was not provided or is invalid)
-
-#### `FORBIDDEN` (401 Forbidden)
-
-The person_id provided in the URL belonged to a recruiter
-
-#### `INVALID_TOKEN` (401 Unauthorized)
-
-The provided JWT token is invalid (e.g., it is expired, not yet valid, or does not contain the required claims)
-
-#### `TOKEN_NOT_PROVIDED` (401 Unauthorized)
-
-No JWT token was provided in the `Authorization` header
-
-#### `TOKEN_REVOKED` (401 Unauthorized)
-
-The provided JWT token has been revoked
-
-## Installation
-
-This project uses pip for package management. The dependencies for the project are listed in the `requirements.txt`
-and `requirements-dev.txt` files.
-
-### Installing Dependencies
-
-To install the dependencies for this project, follow the steps below:
-
-1. Create a virtual environment (optional, but recommended):
-
-```bash
-python -m venv env
-```
-
-2. Activate the virtual environment:
-
-On Windows:
-
-```bash
-env\Scripts\activate
-```
-
-On Unix or MacOS:
-
-```bash
-source env/bin/activate
-```
-
-3. Install the dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-### Installing Development Dependencies
-
-If you plan to contribute to the project, you should also install the development dependencies. After activating your
-virtual environment, run:
-
-```bash
-pip install -r requirements-dev.txt
-```
-
-## Deployment
-
-The application is designed to be deployed on Heroku. You can follow the steps below to deploy the application:
-
-1. Create a new Heroku application.
-2. Set the `DATABASE_URL` environment variable in the Heroku application settings to your PostgreSQL database URL.
-3. Push the application code to the Heroku application's Git repository.
-
-## Database Configuration
-
-The application uses PostgreSQL as its database. The database URL should be set in the `DATABASE_URL` environment
-variable.
-
-## Testing
-
-Tests are written using pytest. You can run the tests by executing the following command in the root directory of the
-project:
-
-```bash
-pytest
-```
-
-## Linting
-
-Flake8 is used for linting the code. You can run the linter by executing the following command in the root directory of
-the project:
-
-```bash
-flake8 --show-source app tests
-```
-
-## Static Analysis
-
-Mypy is used for static type checking. You can run the static type checker by executing the following command in the
-root directory of the project:
-
-```bash
-mypy app tests
+📦 
+├─ .github
+│  └─ workflows      - Contains GitHub Actions workflow files.
+├─ app
+│  ├─ models         - Contains database entities.
+│  ├─ repositories   - Handles database interactions.
+│  ├─ routes         - Defines application routes.
+│  ├─ services       - Implements business logic.
+│  └─ utilities      - Contains HTTP status codes.
+└─ tests
+   ├─ repositories   - Unit tests for repository functions.
+   ├─ routes         - Unit tests for route handlers.
+   ├─ services       - Unit tests for service layer functions.
+   └─ utilities      - Utility functions for testing.
 ```
