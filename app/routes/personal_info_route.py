@@ -36,14 +36,13 @@ def get_personal_info(person_id: Optional[int] = None) -> tuple[Response, int]:
 
     if person_id is None:
         person_id = get_jwt()['id']
-        logging.info(f'Fetching personal info for id: {person_id}.')
     else:
         if person_id < 1 or person_id > 1000000:
-            logging.error(f'Invalid person_id: {person_id}.')
+            logging.warning(f'Invalid person_id: {person_id}.')
             return jsonify({'error': 'INVALID_ID'}), StatusCodes.BAD_REQUEST
         if get_jwt()['role'] != 1:
-            logging.error(f'Unauthorized access to personal info for id: '
-                          f'{person_id}.')
+            logging.warning(f'Unauthorized access to personal info for id: '
+                            f'{person_id}.')
             return jsonify({'error': 'UNAUTHORIZED'}), StatusCodes.UNAUTHORIZED
 
     try:
@@ -51,13 +50,13 @@ def get_personal_info(person_id: Optional[int] = None) -> tuple[Response, int]:
         logging.info(f'Personal info fetched for id: {person_id}.')
         return jsonify(personal_info), StatusCodes.OK
     except NoResultFound:
-        logging.error(f'User not found for id: {person_id}.')
+        logging.warning(f'User not found for id: {person_id}.')
         return jsonify({'error': 'USER_NOT_FOUND'}), StatusCodes.NOT_FOUND
     except SQLAlchemyError:
         logging.error(f'Could not fetch user for id: {person_id}.')
         return (jsonify({'error': 'COULD_NOT_FETCH_USER'}),
                 StatusCodes.INTERNAL_SERVER_ERROR)
     except PermissionError:
-        logging.error(f'Unauthorized access to personal info for id: '
+        logging.warning(f'Unauthorized access to personal info for id: '
                       f'{person_id}.')
         return jsonify({'error': 'FORBIDDEN'}), StatusCodes.FORBIDDEN
