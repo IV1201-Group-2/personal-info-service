@@ -22,8 +22,8 @@ def get_person_from_db(person_id: int) -> Person:
     try:
         return Person.query.filter_by(person_id=person_id).one()
     except NoResultFound as exception:
-        logging.debug(str(exception))
+        logging.debug(str(exception), exc_info=True)
         raise NoResultFound
     except SQLAlchemyError as exception:
-        logging.debug(str(exception))
+        logging.debug(str(exception), exc_info=True)
         raise SQLAlchemyError
