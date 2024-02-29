@@ -1,5 +1,5 @@
 # Personal Information Service
-This is a simple RESTful API that allows applicants and recruiters to retrieve applicant's personal information. It is a microservice that is part of a larger, recruitment application.
+This is a simple RESTful API that allows applicants and recruiters to retrieve applicant's personal information. It is a microservice that is part of a recruitment application.
 ## General Information
 - **Programming Language**: Python
 - **Virtual Environment**: Python venv
