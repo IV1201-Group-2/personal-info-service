@@ -12,7 +12,7 @@ This is a simple RESTful API that allows applicants and recruiters to retrieve a
 - **Logging**: Flask-Logging + Root Logger
 - **Database Integration**: Flask-SQLAlchemy
 - **Database**: PostgreSQL
-- **Testing**: Pytest
+- **Testing**: Pytest + Testcontainers
 - **Code Coverage**: pytest-cov
 - **Linting**: flake8
 - **Dependency Management**: Pip
@@ -31,7 +31,6 @@ Ensure all commands are executed from the project root.
 2. **Install Dependencies**: Install all required dependencies.
     ```bash
     pip install -r requirements.txt
-    pip install -r requirements-dev.txt
     ```
 
 3. **Run Tests**: Execute all tests.
