@@ -104,5 +104,3 @@ def register_blueprints(personal_info_api: Flask) -> None:
 if __name__ == "__main__":
     app = create_app()
     app.run(debug=True)
-
-application = create_app()
