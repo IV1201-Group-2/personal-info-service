@@ -77,7 +77,7 @@ def test_get_recruiter_unauthorized_access(app_with_client):
     token = generate_token_for_recruiter(app)
 
     response = test_client.get(
-            '/api/applicant/personal-info/2',
+            '/api/applicant/personal-info/1',
             headers={'Authorization': f'Bearer {token}'})
     assert response.status_code == StatusCodes.FORBIDDEN
 
